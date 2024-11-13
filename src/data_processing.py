@@ -5,6 +5,7 @@ from sklearn.preprocessing import StandardScaler
 from src.logger import logger
 from joblib import dump
 import os
+import json
 
 def load_data(filepath):
     logger.info(f"Carregando dados de {filepath}")
@@ -46,13 +47,21 @@ def preprocess_data(df):
     X = df.drop('house_price_unit_area', axis=1)
     y = df['house_price_unit_area']
     
+    # Salvar os nomes das features
+    feature_names = X.columns.tolist()
+    
+    # Garantir que o diretório 'models/' existe
+    os.makedirs("models", exist_ok=True)
+    
+    # Salvar os nomes das features em 'models/feature_names.json'
+    with open('models/feature_names.json', 'w') as f:
+        json.dump(feature_names, f)
+    logger.info("Nomes das features salvos em models/feature_names.json")
+    
     # Escalonamento das features
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     logger.info("Features escalonadas.")
-    
-    # **Garantir que o diretório 'models/' existe**
-    os.makedirs("models", exist_ok=True)
     
     # Salvar o scaler para uso na API
     dump(scaler, "models/scaler.joblib")
