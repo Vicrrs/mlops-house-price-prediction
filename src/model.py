@@ -1,12 +1,11 @@
 # src/model.py
 import mlflow
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 from joblib import dump
 import os
 from src.logger import logger
 import numpy as np
-
 
 def train_model(X_train, y_train, X_val, y_val):
     with mlflow.start_run():
@@ -19,8 +18,14 @@ def train_model(X_train, y_train, X_val, y_val):
 
         predictions = model.predict(X_val)
         mse = mean_squared_error(y_val, predictions)
+        mae = mean_absolute_error(y_val, predictions)
         rmse = np.sqrt(mse)
+        
+        logger.info(f"MAE no conjunto de validação: {mae}")
         logger.info(f"RMSE no conjunto de validação: {rmse}")
+        
+        # Loga as métricas no MLflow
+        mlflow.log_metric("mae", mae)
         mlflow.log_metric("rmse", rmse)
 
         # Salvar o modelo
