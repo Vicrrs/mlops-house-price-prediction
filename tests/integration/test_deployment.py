@@ -9,7 +9,6 @@ def test_docker_build():
 
 
 def test_prediction_service():
-    # Certifique-se de que o container está em execução antes de executar este teste
     payload = {
         "transaction_date": 2013.5,
         "house_age": 13.3,
