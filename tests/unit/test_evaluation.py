@@ -1,11 +1,13 @@
 # tests/unit/test_evaluation.py
 import pytest
-from sklearn.datasets import make_regression
 from src.evaluation import evaluate_model
 from joblib import dump
+import numpy as np
 
 def test_evaluate_model():
-    X_test, y_test = make_regression(n_samples=20, n_features=10)
+    # Dados sintéticos para teste
+    X_test = np.random.rand(20, 6)
+    y_test = np.random.rand(20)
     # Criar e salvar um modelo dummy para teste
     from sklearn.linear_model import LinearRegression
     model = LinearRegression()
