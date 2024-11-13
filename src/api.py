@@ -1,7 +1,6 @@
 # src/api.py
 from flask import Flask, request, jsonify
 from joblib import load
-import numpy as np
 from src.logger import logger
 import json
 
