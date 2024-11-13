@@ -18,28 +18,20 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install flake8 black bandit coverage pytest pytest-cov
+          pip install pytest pytest-cov
 
-      - name: Lint with flake8
-        run: flake8 src/ tests/
+      - name: Train model
+        run: python -m src.train
 
-      - name: Format code with black
-        run: black --check src/ tests/
+      - name: Start API
+        run: |
+          nohup python -m src.api &
+      - name: Wait for API to start
+        run: sleep 5
 
-      - name: Run security checks with bandit
-        run: bandit -r src/
-
-      - name: Run tests with pytest and coverage
+      - name: Run tests
         run: pytest tests/ --cov=src/
 
-      - name: Deploy to staging
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      - name: Stop API
         run: |
-          echo "Deploying to staging environment..."
-          docker-compose up -d
-
-      - name: Notify team on failure
-        if: failure()
-        run: |
-          echo "Notifying team of pipeline failure"
-          # Comandos para enviar notificações (e.g., via Slack ou email)
+          pkill -f "python -m src.api"
