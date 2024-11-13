@@ -5,7 +5,7 @@ from sklearn.metrics import mean_squared_error
 from joblib import dump
 import os
 from src.logger import logger
-import numpy as np  # Certifique-se de importar o numpy
+import numpy as np
 
 def train_model(X_train, y_train, X_val, y_val):
     with mlflow.start_run():
