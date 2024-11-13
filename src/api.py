@@ -9,7 +9,7 @@ model = load("models/model.joblib")
 scaler = load("models/scaler.joblib")
 logger.info("Modelo e scaler carregados para a API.")
 
-# Carregar os nomes das features
+# carrega os nomes das features
 with open("models/feature_names.json", "r") as f:
     feature_names = json.load(f)
 logger.info("Nomes das features carregados.")
@@ -18,13 +18,13 @@ logger.info("Nomes das features carregados.")
 @app.route("/predict", methods=["POST"])
 def predict():
     data = request.get_json(force=True)
-    # Ordenar os dados de entrada de acordo com os nomes das features
+    # ordena os dados de entrada de acordo com os nomes das features
     features = [data.get(feature) for feature in feature_names]
     # Converter para DataFrame
     import pandas as pd
 
     input_data = pd.DataFrame([features], columns=feature_names)
-    # Escalonar as features
+
     features_scaled = scaler.transform(input_data)
     # Fazer a predição
     prediction = model.predict(features_scaled)
