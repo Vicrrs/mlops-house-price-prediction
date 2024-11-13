@@ -1,0 +1,45 @@
+name: CI/CD Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install flake8 black bandit coverage pytest pytest-cov
+
+      - name: Lint with flake8
+        run: flake8 src/ tests/
+
+      - name: Format code with black
+        run: black --check src/ tests/
+
+      - name: Run security checks with bandit
+        run: bandit -r src/
+
+      - name: Run tests with pytest and coverage
+        run: pytest tests/ --cov=src/
+
+      - name: Deploy to staging
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          echo "Deploying to staging environment..."
+          docker-compose up -d
+
+      - name: Notify team on failure
+        if: failure()
+        run: |
+          echo "Notifying team of pipeline failure"
+          # Comandos para enviar notificações (e.g., via Slack ou email)
