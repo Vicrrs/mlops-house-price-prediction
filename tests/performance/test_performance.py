@@ -19,7 +19,7 @@ def test_training_time(data):
     train_model(X_train, y_train, X_val, y_val)
     end_time = time.time()
     training_time = end_time - start_time
-    assert training_time < 60  # Ajuste o tempo conforme necessário
+    assert training_time < 60
 
 
 def test_inference_time():
@@ -29,4 +29,4 @@ def test_inference_time():
     model.predict(sample)
     end_time = time.time()
     inference_time = end_time - start_time
-    assert inference_time < 0.1  # A inferência deve ser rápida
+    assert inference_time < 0.1
