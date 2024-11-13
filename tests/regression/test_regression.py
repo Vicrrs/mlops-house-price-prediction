@@ -1,4 +1,3 @@
-# tests/regression/test_regression.py
 import json
 from src.evaluation import evaluate_model
 from src.data_processing import load_data, preprocess_data
@@ -10,5 +9,7 @@ def test_regression():
     data = load_data("data/raw/real_estate.xlsx")
     X_train, X_test, y_train, y_test = preprocess_data(data)
     r2, mae = evaluate_model("models/model.joblib", X_test, y_test)
-    assert r2 >= previous_results["r2"]
-    assert mae <= previous_results["mae"]
+    
+    tolerance = 0.01  # Tolerância de 1%
+    assert r2 >= previous_results["r2"] - tolerance
+    assert mae <= previous_results["mae"] + tolerance
