@@ -17,7 +17,7 @@ def make_request(_):
 
 
 def test_stress():
-    # Certifique-se de que a API está em execução antes de executar este teste
+    # API está em execução antes de executar este teste
     with Pool(100) as pool:  # 100 processos simultâneos
         results = pool.map(make_request, range(1000))  # 1000 requisições
     assert all(status == 200 for status in results)
