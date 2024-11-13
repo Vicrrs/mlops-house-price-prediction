@@ -1,5 +1,4 @@
 # tests/unit/test_model.py
-import pytest
 from src.model import train_model
 import numpy as np
 

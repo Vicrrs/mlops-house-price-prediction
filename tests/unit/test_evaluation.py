@@ -1,5 +1,4 @@
 # tests/unit/test_evaluation.py
-import pytest
 from src.evaluation import evaluate_model
 from joblib import dump
 import numpy as np

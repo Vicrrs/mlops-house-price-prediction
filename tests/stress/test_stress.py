@@ -1,5 +1,4 @@
 # tests/stress/test_stress.py
-import pytest
 import requests
 from multiprocessing import Pool
 

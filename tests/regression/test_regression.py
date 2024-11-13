@@ -1,5 +1,4 @@
 # tests/regression/test_regression.py
-import pytest
 import json
 from src.evaluation import evaluate_model
 from src.data_processing import load_data, preprocess_data

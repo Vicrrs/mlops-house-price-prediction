@@ -1,5 +1,4 @@
 # tests/unit/test_data_processing.py
-import pytest
 from src.data_processing import preprocess_data, load_data
 
 

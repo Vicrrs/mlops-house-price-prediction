@@ -1,5 +1,4 @@
 # tests/security/test_security.py
-import pytest
 import subprocess
 import json
 

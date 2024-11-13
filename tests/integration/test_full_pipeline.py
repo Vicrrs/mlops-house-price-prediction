@@ -1,5 +1,4 @@
 # tests/integration/test_full_pipeline.py
-import pytest
 import os
 from src.train import main as train_main
 from src.evaluation import evaluate_model

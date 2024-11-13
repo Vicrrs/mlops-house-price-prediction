@@ -1,5 +1,4 @@
 # tests/integration/test_deployment.py
-import pytest
 import os
 import requests
 
