@@ -3,7 +3,6 @@ import json
 from src.evaluation import evaluate_model
 from src.data_processing import load_data, preprocess_data
 
-
 def test_regression():
     # Carregar resultados anteriores
     with open("tests/regression/previous_results.json") as f:
