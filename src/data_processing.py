@@ -1,31 +1,66 @@
 # src/data_processing.py
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
+from src.logger import logger
+from joblib import dump
+import os
 
 def load_data(filepath):
-    return pd.read_csv(filepath)
+    logger.info(f"Carregando dados de {filepath}")
+    # Ler o Excel considerando a vírgula como separador decimal
+    df = pd.read_excel(filepath, decimal=',')
+    return df
 
 def preprocess_data(df):
-    # Imputação de valores faltantes
-    imputer = SimpleImputer(strategy='mean')
-    numeric_cols = df.select_dtypes(include=['float64', 'int64']).columns
-    df[numeric_cols] = imputer.fit_transform(df[numeric_cols])
-
-    # Remoção de outliers simples (por exemplo, usando o IQR)
-    Q1 = df[numeric_cols].quantile(0.25)
-    Q3 = df[numeric_cols].quantile(0.75)
-    IQR = Q3 - Q1
-    df = df[~((df[numeric_cols] < (Q1 - 1.5 * IQR)) | (df[numeric_cols] > (Q3 + 1.5 * IQR))).any(axis=1)]
-
-    # Encoding de variáveis categóricas
-    df = pd.get_dummies(df, drop_first=True)
-
-    # Escalonamento de features
+    logger.info("Iniciando pré-processamento dos dados.")
+    
+    # Renomear colunas
+    df.columns = [
+        'No',
+        'transaction_date',
+        'house_age',
+        'distance_MRT',
+        'number_convenience_stores',
+        'latitude',
+        'longitude',
+        'house_price_unit_area'
+    ]
+    
+    # Remover a coluna 'No'
+    df = df.drop('No', axis=1)
+    
+    # Converter colunas numéricas que estão como strings devido à vírgula decimal
+    cols_to_convert = df.columns
+    for col in cols_to_convert:
+        df[col] = df[col].astype(str).str.replace(',', '.').astype(float)
+    
+    # Verificar e remover valores nulos
+    if df.isnull().sum().sum() > 0:
+        df = df.dropna()
+        logger.info("Valores nulos encontrados e removidos.")
+    else:
+        logger.info("Nenhum valor nulo encontrado.")
+    
+    # Separar features e target
+    X = df.drop('house_price_unit_area', axis=1)
+    y = df['house_price_unit_area']
+    
+    # Escalonamento das features
     scaler = StandardScaler()
-    X = df.drop('SalePrice', axis=1)
-    y = df['SalePrice']
     X_scaled = scaler.fit_transform(X)
-
-    return train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+    logger.info("Features escalonadas.")
+    
+    # **Garantir que o diretório 'models/' existe**
+    os.makedirs("models", exist_ok=True)
+    
+    # Salvar o scaler para uso na API
+    dump(scaler, "models/scaler.joblib")
+    logger.info("Scaler salvo em models/scaler.joblib")
+    
+    X_train, X_val, y_train, y_val = train_test_split(
+        X_scaled, y, test_size=0.2, random_state=42
+    )
+    logger.info("Divisão dos dados em treino e validação concluída.")
+    
+    return X_train, X_val, y_train, y_val
