@@ -3,6 +3,7 @@ import pytest
 import requests
 from multiprocessing import Pool
 
+
 def make_request(_):
     payload = {
         "transaction_date": 2013.5,
@@ -10,10 +11,11 @@ def make_request(_):
         "distance_MRT": 561.9845,
         "number_convenience_stores": 5,
         "latitude": 24.98746,
-        "longitude": 121.54391
+        "longitude": 121.54391,
     }
-    response = requests.post('http://localhost:5000/predict', json=payload)
+    response = requests.post("http://localhost:5000/predict", json=payload)
     return response.status_code
+
 
 def test_stress():
     # Certifique-se de que a API está em execução antes de executar este teste

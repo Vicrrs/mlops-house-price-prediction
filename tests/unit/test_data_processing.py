@@ -2,6 +2,7 @@
 import pytest
 from src.data_processing import preprocess_data, load_data
 
+
 def test_preprocess_data():
     df = load_data("data/raw/real_estate.xlsx")
     X_train, X_val, y_train, y_val = preprocess_data(df)

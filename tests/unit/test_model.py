@@ -3,6 +3,7 @@ import pytest
 from src.model import train_model
 import numpy as np
 
+
 def test_train_model():
     # Dados sintéticos para teste
     X_train = np.random.rand(100, 6)

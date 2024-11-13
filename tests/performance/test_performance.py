@@ -6,10 +6,12 @@ from src.data_processing import preprocess_data, load_data
 import numpy as np
 from joblib import load
 
+
 @pytest.fixture
 def data():
     df = load_data("data/raw/real_estate.xlsx")
     return preprocess_data(df)
+
 
 def test_training_time(data):
     X_train, X_val, y_train, y_val = data
@@ -18,6 +20,7 @@ def test_training_time(data):
     end_time = time.time()
     training_time = end_time - start_time
     assert training_time < 60  # Ajuste o tempo conforme necessário
+
 
 def test_inference_time():
     model = load("models/model.joblib")
